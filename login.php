@@ -58,23 +58,29 @@ if(isPost()){
                     mysqli_stmt_bind_result($stmt, $id, $username, $hashed_password);
 
                     if(mysqli_stmt_fetch($stmt)){
-                        if(password_verify($password, $hashed_password)){
-                            // Password no es correcto, inicia una nueva sesión
-                            session_start();
-                            
-                            // Almacena datos de sesión en variables
-                            $_SESSION["loggedin"] = true;
-                            $_SESSION["id"] = $id;
-                            $_SESSION["username"] = $username;
-
-                            // Redirecciona al usuario a la página del index
-                            //header("location: menuprincipal.php");
-                            //header("location: index.php");
-
-
-                        } else{
-                            // Password no es válido, despliega un mensaje de error genérico
-                            $login_err = "Nombre de usuario o contraseña incorrectos.";
+                        $password = trim($password);
+                        $hashed_password = trim($hashed_password);
+                        
+                        if (mb_check_encoding($password, 'UTF-8') && mb_check_encoding($hashed_password, 'UTF-8')) {
+                                // Proceed with password_verify
+                            if(password_verify($password, $hashed_password)){
+                                // Password no es correcto, inicia una nueva sesión
+                                session_start();
+                                
+                                // Almacena datos de sesión en variables
+                                $_SESSION["loggedin"] = true;
+                                $_SESSION["id"] = $id;
+                                $_SESSION["username"] = $username;
+    
+                                // Redirecciona al usuario a la página del index
+                                //header("location: menuprincipal.php");
+                                //header("location: index.php");
+    
+    
+                            } else{
+                                // Password no es válido, despliega un mensaje de error genérico
+                                $login_err = "Nombre de usuario o contraseña incorrectos.";
+                            }
                         }
                     }
                 } else{
